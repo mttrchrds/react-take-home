@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import PropTypes from "prop-types";
 import _get from "lodash/get";
+import _debounce from "lodash/debounce";
+import axios from "axios";
 
 import { enumsProductTypes } from "../../../utilities/enums";
 
@@ -42,6 +44,24 @@ const ProductForm = ({
   const [formValueMaterials, setFormValueMaterials] = useState(
     _get(product, "materials", "")
   );
+  const [duplicateName, setDuplicateName] = useState(false);
+
+  const debouncedNameCheck = useMemo(
+    () =>
+      _debounce((name) => {
+        axios
+          .post(`http://localhost:8080/api/validate`, {
+            name,
+          })
+          .then((response) => {
+            setDuplicateName(false);
+          })
+          .catch((error) => {
+            setDuplicateName(true);
+          });
+      }, 300),
+    []
+  );
 
   const handleSubmitForm = (e) => {
     e.preventDefault();
@@ -60,6 +80,7 @@ const ProductForm = ({
 
   const handleChangeName = (e) => {
     setFormValueName(e.target.value);
+    debouncedNameCheck(e.target.value);
   };
 
   const renderSecondaryFields = () => {
@@ -108,6 +129,11 @@ const ProductForm = ({
           <Error text={error} />
         </div>
       )}
+      {duplicateName && (
+        <div className="mb-4">
+          <Error text="Product name must be unique" />
+        </div>
+      )}
       {success && (
         <div className="mb-4">
           <Success text={success} />
@@ -120,6 +146,7 @@ const ProductForm = ({
             value={formValueName}
             onChange={handleChangeName}
             label="Product name"
+            error={duplicateName}
           />
           <Select
             name="type"
@@ -136,7 +163,9 @@ const ProductForm = ({
           <div className="d-flex justify-content-end">
             <Button
               type="submit"
-              disabled={!formValueType || !formValueName ? true : false}
+              disabled={
+                !formValueType || !formValueName || duplicateName ? true : false
+              }
             >
               {submitLabel}
             </Button>
