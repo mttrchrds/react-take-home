@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 import { buildLink } from "../../utilities/links";
 
@@ -8,6 +8,7 @@ import PageTitle from "../../components/pages/page_title";
 import ProductsList from "./components/products_list";
 import Loading from "../../components/ui/loading";
 import Button from "../../components/forms/button";
+import PageLayout from "../../components/layout/page_layout";
 
 const ProductsPage = () => {
   const navigate = useNavigate();
@@ -40,19 +41,28 @@ const ProductsPage = () => {
 
     return (
       <>
-        <Button type="button" onClick={handleClickCreateButton}>
-          Create product
-        </Button>
+        <div className="d-flex justify-content-end mb-3">
+          <Button type="button" onClick={handleClickCreateButton}>
+            Create product
+          </Button>
+        </div>
         <ProductsList products={products} />
       </>
     );
   };
 
   return (
-    <>
+    <PageLayout>
+      <nav aria-label="breadcrumb">
+        <ol className="breadcrumb">
+          <li className="breadcrumb-item active" aria-current="page">
+            Products
+          </li>
+        </ol>
+      </nav>
       <PageTitle>Products page</PageTitle>
       {renderProducts()}
-    </>
+    </PageLayout>
   );
 };
 

@@ -1,5 +1,7 @@
 import PropTypes from "prop-types";
 
+import Form from "react-bootstrap/Form";
+
 const Select = ({
   name,
   onChange,
@@ -9,23 +11,17 @@ const Select = ({
   defaultOptionLabel,
 }) => {
   return (
-    <div>
-      <label htmlFor={name}>{label}</label>
-      <select
-        type="text"
-        onChange={onChange}
-        value={value}
-        name={name}
-        id={name}
-      >
+    <Form.Group className="mb-3">
+      <Form.Label>{label}</Form.Label>
+      <Form.Select onChange={onChange} value={value} name={name}>
         {defaultOptionLabel && <option value="">{defaultOptionLabel}</option>}
         {options.map((o) => (
           <option key={o.value} value={o.value}>
             {o.label}
           </option>
         ))}
-      </select>
-    </div>
+      </Form.Select>
+    </Form.Group>
   );
 };
 
@@ -40,7 +36,6 @@ Select.propTypes = {
       value: PropTypes.string.isRequired,
     })
   ).isRequired,
-  defaultOptionLabel: PropTypes.string,
 };
 
 export default Select;

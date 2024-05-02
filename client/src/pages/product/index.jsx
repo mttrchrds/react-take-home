@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 
 import { buildLink } from "../../utilities/links";
@@ -7,6 +7,9 @@ import { buildLink } from "../../utilities/links";
 import PageTitle from "../../components/pages/page_title";
 import Loading from "../../components/ui/loading";
 import ProductForm from "./components/product_form";
+import PageLayout from "../../components/layout/page_layout";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 
 const ProductPage = () => {
   const { productId } = useParams();
@@ -92,10 +95,24 @@ const ProductPage = () => {
   };
 
   return (
-    <>
+    <PageLayout>
+      <nav aria-label="breadcrumb">
+        <ol className="breadcrumb">
+          <li className="breadcrumb-item">
+            <Link to={buildLink.products()}>Products</Link>
+          </li>
+          <li className="breadcrumb-item active" aria-current="page">
+            Product
+          </li>
+        </ol>
+      </nav>
       <PageTitle>Product page</PageTitle>
-      {renderForm()}
-    </>
+      <Row className="justify-content-center">
+        <Col sm={8} md={6}>
+          {renderForm()}
+        </Col>
+      </Row>
+    </PageLayout>
   );
 };
 

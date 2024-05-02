@@ -1,7 +1,9 @@
 import PropTypes from "prop-types";
 
+import Alert from "react-bootstrap/Alert";
+
 const Error = ({ text }) => {
-  return <h3>{text}</h3>;
+  return <Alert variant="danger">{text}</Alert>;
 };
 
 Error.propTypes = {

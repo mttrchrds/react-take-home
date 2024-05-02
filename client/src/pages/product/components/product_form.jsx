@@ -9,6 +9,7 @@ import Button from "../../../components/forms/button";
 import Select from "../../../components/forms/select";
 import Error from "../../../components/ui/error";
 import Success from "../../../components/ui/success";
+import Form from "react-bootstrap/Form";
 
 const ProductForm = ({
   product,
@@ -102,10 +103,18 @@ const ProductForm = ({
 
   return (
     <>
-      {error && <Error text={error} />}
-      {success && <Success text={success} />}
+      {error && (
+        <div className="mb-4">
+          <Error text={error} />
+        </div>
+      )}
+      {success && (
+        <div className="mb-4">
+          <Success text={success} />
+        </div>
+      )}
       <fieldset disabled={loading}>
-        <form onSubmit={handleSubmitForm}>
+        <Form onSubmit={handleSubmitForm}>
           <TextInput
             name="name"
             value={formValueName}
@@ -124,10 +133,15 @@ const ProductForm = ({
             defaultOptionLabel="Select a type"
           />
           {renderSecondaryFields()}
-          <Button type="submit" disabled={formValueType ? false : true}>
-            {submitLabel}
-          </Button>
-        </form>
+          <div className="d-flex justify-content-end">
+            <Button
+              type="submit"
+              disabled={!formValueType || !formValueName ? true : false}
+            >
+              {submitLabel}
+            </Button>
+          </div>
+        </Form>
       </fieldset>
     </>
   );

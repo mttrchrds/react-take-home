@@ -1,8 +1,10 @@
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 
-import Warning from "../../../components/ui/warning";
 import { buildLink } from "../../../utilities/links";
+
+import Warning from "../../../components/ui/warning";
+import Table from "react-bootstrap/Table";
 
 const ProductsList = ({ products }) => {
   const renderProductRow = (product) => (
@@ -20,7 +22,7 @@ const ProductsList = ({ products }) => {
   }
 
   return (
-    <table width="100%">
+    <Table striped bordered hover responsive>
       <thead>
         <tr>
           <th align="left" width="40%">
@@ -35,7 +37,7 @@ const ProductsList = ({ products }) => {
         </tr>
       </thead>
       <tbody>{products.map((p) => renderProductRow(p))}</tbody>
-    </table>
+    </Table>
   );
 };
 

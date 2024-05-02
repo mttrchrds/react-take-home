@@ -1,20 +1,24 @@
 import PropTypes from "prop-types";
 
-const Button = ({ onClick, children, type, disabled }) => {
+import { default as BootstrapButton } from "react-bootstrap/Button";
+
+const Button = ({ onClick, children, type, disabled, variant }) => {
   return (
-    <button
+    <BootstrapButton
       type={type}
       onClick={onClick ? onClick : undefined}
       disabled={disabled}
+      variant={variant}
     >
       {children}
-    </button>
+    </BootstrapButton>
   );
 };
 
 Button.defaultProps = {
   type: "button",
   disabled: false,
+  variant: "primary",
 };
 
 Button.propTypes = {
@@ -22,6 +26,7 @@ Button.propTypes = {
   children: PropTypes.node.isRequired,
   type: PropTypes.oneOf(["button", "submit"]),
   disabled: PropTypes.bool,
+  variant: PropTypes.string,
 };
 
 export default Button;
