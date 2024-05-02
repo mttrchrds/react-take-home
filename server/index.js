@@ -1,11 +1,13 @@
 const z = require("zod");
 
 const express = require("express");
+const cors = require("cors");
 
 const PORT = process.env.PORT || 8080;
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 
 const footwearSizes = z.enum(["US 7", "US 8", "US 9", "US 10"]);
@@ -56,8 +58,7 @@ const productSchema = z.discriminatedUnion("type", [
 const productNameSchema = z.object({
   name: z.string(),
   id: z.number().int().optional(),
-})
-
+});
 
 const newProductSchema = productSchema.refine(
   (data) => !products.find((product) => product.name === data.name),
@@ -79,17 +80,14 @@ const existingProductSchema = z
     { message: "Name must be unique", path: ["name"] }
   );
 
-
-const existingProductNameSchema = productNameSchema
-.refine(
-  (data) => 
+const existingProductNameSchema = productNameSchema.refine(
+  (data) =>
     !products
       .filter((product) => product.id !== data.id)
-      .find((product) => product.name === data.name)
-  ,
+      .find((product) => product.name === data.name),
   { message: "Name must be unique", path: ["name"] }
-); 
-  
+);
+
 const getProducts = () => {
   return {
     products: [
@@ -282,10 +280,10 @@ app.post("/api/validate/:id?", (req, res) => {
   // validate unique product name field
   // throw error when it's not unique
   const body = req.body;
-  
-  let result
-  if(req.params.id) { 
-    const id = Number(req.params.id)
+
+  let result;
+  if (req.params.id) {
+    const id = Number(req.params.id);
     body["id"] = id;
     result = existingProductNameSchema.safeParse(body);
   } else {
@@ -296,8 +294,8 @@ app.post("/api/validate/:id?", (req, res) => {
     return res.status(400).json({ error: result.error });
   }
 
-  if(result.success) {
-    return res.status(200).json({ message: "Product name is unique."})
+  if (result.success) {
+    return res.status(200).json({ message: "Product name is unique." });
   }
 });
 
