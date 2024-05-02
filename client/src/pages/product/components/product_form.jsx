@@ -1,10 +1,16 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import PropTypes from "prop-types";
 import _get from "lodash/get";
 import _debounce from "lodash/debounce";
 import axios from "axios";
 
-import { enumsProductTypes } from "../../../utilities/enums";
+import {
+  enumsProductTypes,
+  enumsProductTypeFootwear,
+  enumsFootwearSizes,
+  enumsClothingSizes,
+} from "../../../utilities/enums";
+import { usePrevious } from "../../../utilities/hooks";
 
 import TextInput from "../../../components/forms/text_input";
 import Button from "../../../components/forms/button";
@@ -12,6 +18,7 @@ import Select from "../../../components/forms/select";
 import Error from "../../../components/ui/error";
 import Success from "../../../components/ui/success";
 import Form from "react-bootstrap/Form";
+import CreateMultiple from "../../../components/forms/create_multiple";
 
 const ProductForm = ({
   product,
@@ -27,7 +34,7 @@ const ProductForm = ({
     _get(product, "sizes", [])
   );
   const [formValueFeatures, setFormValueFeatures] = useState(
-    _get(product, "sizes", [])
+    _get(product, "features", [])
   );
   const [formValueBrand, setFormValueBrand] = useState(
     _get(product, "brand", "")
@@ -39,12 +46,13 @@ const ProductForm = ({
     _get(product, "colour", "")
   );
   const [formValueStyle, setFormValueStyle] = useState(
-    _get(product, "colour", "")
+    _get(product, "style", "")
   );
   const [formValueMaterials, setFormValueMaterials] = useState(
     _get(product, "materials", "")
   );
   const [duplicateName, setDuplicateName] = useState(false);
+  const [sOptions, setSOptions] = useState([]);
 
   const debouncedNameCheck = useMemo(
     () =>
@@ -62,6 +70,20 @@ const ProductForm = ({
       }, 300),
     []
   );
+
+  const prevFormValueType = usePrevious(formValueType);
+
+  useEffect(() => {
+    if (formValueType === enumsProductTypeFootwear) {
+      setSOptions(enumsFootwearSizes);
+    } else {
+      setSOptions(enumsClothingSizes);
+    }
+    // Ensure that sizes are cleared when switching type
+    if (prevFormValueType && prevFormValueType !== formValueType) {
+      setFormValueSizes([]);
+    }
+  }, [formValueType, prevFormValueType]);
 
   const handleSubmitForm = (e) => {
     e.preventDefault();
@@ -83,15 +105,51 @@ const ProductForm = ({
     debouncedNameCheck(e.target.value);
   };
 
+  const handleChangeSizes = (payload) => {
+    const parsedPayload = payload.map((p) => p.value);
+    setFormValueSizes(parsedPayload);
+  };
+
+  const handleChangeFeatures = (payload) => {
+    const parsedPayload = payload.map((p) => p.value);
+    setFormValueFeatures(parsedPayload);
+  };
+
+  const handleAddFeature = (payload) => {
+    setFormValueFeatures((prev) => [...prev, payload.value]);
+  };
+
   const renderSecondaryFields = () => {
     if (formValueType) {
       return (
         <>
+          <Select
+            options={sOptions.map((o) => ({
+              label: o,
+              value: o,
+            }))}
+            multi={true}
+            onChange={handleChangeSizes}
+            defaultOptionLabel="Select sizes"
+            value={formValueSizes.map((s) => ({
+              label: s,
+              value: s,
+            }))}
+            label="Sizes"
+            name="sizes"
+          />
           <TextInput
             name="brand"
             value={formValueBrand}
             onChange={(e) => setFormValueBrand(e.target.value)}
             label="Brand"
+          />
+          <CreateMultiple
+            value={formValueFeatures.map((f) => ({ label: f, value: f }))}
+            onChange={handleChangeFeatures}
+            onAdd={handleAddFeature}
+            label="Features"
+            defaultOptionLabel="Enter some features"
           />
           <TextInput
             name="style"
@@ -151,7 +209,7 @@ const ProductForm = ({
           <Select
             name="type"
             value={formValueType}
-            onChange={(e) => setFormValueType(e.target.value)}
+            onChange={(value) => setFormValueType(value)}
             label="Product type"
             options={enumsProductTypes.map((p) => ({
               label: p,
