@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "client": "cd client && npm start",
+    "test": "cd client && npm test",
     "start": "nodemon server/index.js",
     "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
   },

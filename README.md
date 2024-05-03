@@ -1,5 +1,17 @@
 # react-take-home
 
+## Instructions from Matt
+
+Start backend server: `npm run start`
+
+Start front end client server: `npm run client`
+
+Application should open automatically. If not, go to `http://localhost:3000` to view the Products list page
+
+Run front end tests: `npm run test`
+
+## Summary of task
+
 React take home task for Sr. Frontend Dev role
 
 Thank you for your application to SearchPilot! We greatly appreciate you taking the time to apply and your interest in working with us.
