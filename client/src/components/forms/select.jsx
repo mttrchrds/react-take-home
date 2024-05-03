@@ -42,6 +42,7 @@ const Select = ({
         value={defaultValue()}
         placeholder={defaultOptionLabel}
         isClearable={false}
+        isSearchable={false}
       />
     </Form.Group>
   );
