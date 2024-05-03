@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import ProductForm from "../product_form";
+import ProductForm from "../components/product_form";
 
 describe("ProductForm create product", () => {
   it("render empty product name field", () => {
