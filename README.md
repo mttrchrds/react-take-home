@@ -13,7 +13,7 @@ Start front end client dev server (from this directory): `npm run client`
 
 Application should open automatically. If not, go to `http://localhost:3000` to view the Products list page
 
-Run front end tests: `npm run test`
+Run front end tests (from this directory): `npm run test`
 
 ## Summary of task
 
