@@ -2,9 +2,14 @@
 
 ## Instructions from Matt
 
-Start backend server: `npm run start`
+Firstly, install dependencies:
 
-Start front end client server: `npm run client`
+- From this directory: `npm install`
+- From "client" directory: `npm install`
+
+Start backend server (from this directory): `npm run start`
+
+Start front end client dev server (from this directory): `npm run client`
 
 Application should open automatically. If not, go to `http://localhost:3000` to view the Products list page
 
